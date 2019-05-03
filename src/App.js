@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 let defaultStyle = {
-  color: '#000'
+  color: '#fff'
 };
 //Component #1 collection playlist
 class Aggregate extends Component {
@@ -44,8 +44,8 @@ class Playlist extends Component {
 class App extends Component {
   render() {
     return (
-      <div className="App" style={{...defaultStyle}} >
-        <h1>Title</h1>
+      <div className="App" >
+        <h1 style={{...defaultStyle, 'font-size' : '54px'}} >Title</h1>
         <Aggregate />
         <Aggregate />
         <Filter />
@@ -53,7 +53,7 @@ class App extends Component {
         <Playlist />
         <Playlist />
         <Playlist />
-      </div >
+    </div>
     );
   }
 
