@@ -1,0 +1,10 @@
+let dog = 'woof'
+let nothing = null
+let cat = 'meow'
+
+let result = dog && cat
+result
+
+
+let result = cat ? 'my favorite cat' : 'something else'
+result

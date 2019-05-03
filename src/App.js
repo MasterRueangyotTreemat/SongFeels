@@ -4,18 +4,75 @@ import './App.css';
 let defaultStyle = {
   color: '#fff'
 };
-//Component #1 collection playlist
-class Aggregate extends Component {
+
+let fakeServerData = {
+  user: {
+    name: 'Noom',
+    playlists: [
+      {
+        name: 'My favorite',
+        songs:[
+          {name: 'Beat It', duration:1345},
+          {name: 'Cannelloni Makaroni', duration:1236},
+          {name: 'Rosa helikopter', duration: 70000}
+        ]
+      },
+      {
+        name: 'Discover Weekly',
+        songs:[
+          {name: 'Beat It', duration:1345},
+          {name: 'Cannelloni Makaroni', duration:1236},
+          {name: 'Rosa helikopter', duration: 70000}
+        ]
+      },
+      {
+        name: 'Another playlist - the best!',
+        songs:[
+          {name: 'Beat It', duration:1345},
+          {name: 'Cannelloni Makaroni', duration:1236},
+          {name: 'Rosa helikopter', duration: 70000}
+        ]
+      },
+      {
+        name: 'Playlist - yeah!',
+        songs:[
+          {name: 'Beat It', duration:1345},
+          {name: 'Cannelloni Makaroni', duration:1236},
+          {name: 'Rosa helikopter', duration: 70000}
+        ]
+      }
+    ]
+  }
+};
+
+//Component #1 collect amount playlist
+class PlaylistCounter extends Component {
   render() {
     return (
       <div style={{ ...defaultStyle, width: "40%", display: 'inline-block' }}>
-        <h2>Number Text</h2>
+        <h2>{this.props.playlists.length} playlists</h2>
       </div>
     );
   }
 }
 
-//Component #2 filter playlist
+
+//Component #2 collect hours playlist
+class HoursCounter extends Component {
+  render() {
+    let allSongs = this.props.playlists.reduce( (songs, eachPlaylist) => {
+      return songs.concat(eachPlaylist.songs)
+    }, [])//reduced something to a single value /this case we want to reduce the playlist to a list of songs
+    //let totalDuration =
+    return (
+      <div style={{ ...defaultStyle, width: "40%", display: 'inline-block' }}>
+        <h2>{allSongs.length} hours</h2>
+      </div>
+    );
+  }
+}
+
+//Component #3 filter playlist
 class Filter extends Component {
   render() {
     return (
@@ -27,7 +84,7 @@ class Filter extends Component {
   }
 }
 
-//Component #3 show playlist
+//Component #4 show playlist
 class Playlist extends Component {
   render() {
     return (
@@ -42,17 +99,41 @@ class Playlist extends Component {
 
 //Show all component
 class App extends Component {
+  constructor(){
+    super();
+    this.state = {serverData : {}}
+  }
+  componentDidMount(){
+    setTimeout( () => {
+      this.setState({serverData : fakeServerData});
+    },1000) //1 second
+  }
   render() {
     return (
       <div className="App" >
-        <h1 style={{...defaultStyle, 'font-size' : '54px'}} >Title</h1>
-        <Aggregate />
-        <Aggregate />
+
+      {/**if there is user it will show h1 tag */}
+      {/* ternary operator */}
+        {this.state.serverData.user ?
+        <div>
+        <h1 style={{...defaultStyle, 'font-size' : '54px'}} >
+        {this.state.serverData.user.name}'s Playlists
+        </h1>
+
+        {/* <h1 style={{...defaultStyle, 'font-size' : '54px'}} >
+        {this.state.serverData.user &&
+          this.state.serverData.user.name}'s Playlists
+        </h1> */}
+        <PlaylistCounter playlists={this.state.serverData.user.name}/>
+        <HoursCounter playlists={this.state.serverData.user.name}/>
+
         <Filter />
         <Playlist />
         <Playlist />
         <Playlist />
         <Playlist />
+        </div> : <h1 style={defaultStyle}>Loading...</h1>
+      }
     </div>
     );
   }
@@ -61,3 +142,27 @@ class App extends Component {
 
 
 export default App;
+
+
+// {/**if there is user it will show h1 tag */}
+// {this.state.serverData.user &&
+//   <div>
+//   <h1 style={{...defaultStyle, 'font-size' : '54px'}} >
+//   {this.state.serverData.user.name}'s Playlists
+//   </h1>
+
+//   {/* <h1 style={{...defaultStyle, 'font-size' : '54px'}} >
+//   {this.state.serverData.user &&
+//     this.state.serverData.user.name}'s Playlists
+//   </h1> */}
+//   <Aggregate playlists={this.state.serverData.user.name}/>
+//   <Aggregate />
+
+//   <Filter />
+//   <Playlist />
+//   <Playlist />
+//   <Playlist />
+//   <Playlist />
+//   </div>
+// }
+// </div>
