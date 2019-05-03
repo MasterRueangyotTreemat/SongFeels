@@ -44,7 +44,7 @@ class Playlist extends Component {
 class App extends Component {
   render() {
     return (
-      <div className="App" style={{...defaultStyle, 'font-size' : '54px'}} >
+      <div className="App" style={{...defaultStyle}} >
         <h1>Title</h1>
         <Aggregate />
         <Aggregate />
