@@ -12,32 +12,32 @@ let fakeServerData = {
       {
         name: 'My favorite',
         songs:[
-          {name: 'Beat It', duration:1345},
-          {name: 'Cannelloni Makaroni', duration:1236},
+          {name: 'Beat It', duration: 1345},
+          {name: 'Cannelloni Makaroni', duration: 1236},
           {name: 'Rosa helikopter', duration: 70000}
         ]
       },
       {
         name: 'Discover Weekly',
         songs:[
-          {name: 'Beat It', duration:1345},
-          {name: 'Cannelloni Makaroni', duration:1236},
+          {name: 'Beat It', duration: 1345},
+          {name: 'Cannelloni Makaroni', duration: 1236},
           {name: 'Rosa helikopter', duration: 70000}
         ]
       },
       {
         name: 'Another playlist - the best!',
         songs:[
-          {name: 'Beat It', duration:1345},
-          {name: 'Cannelloni Makaroni', duration:1236},
+          {name: 'Beat It', duration: 1345},
+          {name: 'Cannelloni Makaroni', duration: 1236},
           {name: 'Rosa helikopter', duration: 70000}
         ]
       },
       {
         name: 'Playlist - yeah!',
         songs:[
-          {name: 'Beat It', duration:1345},
-          {name: 'Cannelloni Makaroni', duration:1236},
+          {name: 'Beat It', duration: 1345},
+          {name: 'Cannelloni Makaroni', duration: 1236},
           {name: 'Rosa helikopter', duration: 70000}
         ]
       }
@@ -63,10 +63,12 @@ class HoursCounter extends Component {
     let allSongs = this.props.playlists.reduce( (songs, eachPlaylist) => {
       return songs.concat(eachPlaylist.songs)
     }, [])//reduced something to a single value /this case we want to reduce the playlist to a list of songs
-    //let totalDuration =
+    let totalDuration = allSongs.reduce((sum, eachSong) => {
+      return sum + eachSong.duration
+    }, 0)
     return (
       <div style={{ ...defaultStyle, width: "40%", display: 'inline-block' }}>
-        <h2>{allSongs.length} hours</h2>
+        <h2>{Math.round(totalDuration/60)} hours</h2>
       </div>
     );
   }
@@ -124,8 +126,8 @@ class App extends Component {
         {this.state.serverData.user &&
           this.state.serverData.user.name}'s Playlists
         </h1> */}
-        <PlaylistCounter playlists={this.state.serverData.user.name}/>
-        <HoursCounter playlists={this.state.serverData.user.name}/>
+        <PlaylistCounter playlists={this.state.serverData.user.playlists}/>
+        <HoursCounter playlists={this.state.serverData.user.playlists}/>
 
         <Filter />
         <Playlist />
