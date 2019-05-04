@@ -125,7 +125,7 @@ class App extends Component {
     fetch('https://api.spotify.com/v1/me', {
       headers: { 'Authorization': 'Bearer ' + accessToken }
     }).then(response => response.json())
-      .then(data => this.setState({ serverData: { user: data.display_name } }))
+      .then(data => this.setState({ serverData: { user: { name: data.display_name } } }))
 
     // // SetTimeOut to fake server
     // setTimeout(() => {
@@ -135,9 +135,10 @@ class App extends Component {
   }
   render() {
     //if search playlist data will change.
-    let playlistToRender = this.state.serverData.user ?
-      this.state.serverData.user.playlists
-        .filter(playlist =>
+    let playlistToRender =
+      this.state.serverData.user &&
+        this.state.serverData.user.playlists
+        ? this.state.serverData.user.playlists.filter(playlist =>
           playlist.name.toLocaleLowerCase().includes(
             this.state.filterString.toLocaleLowerCase())
         ) : []
@@ -156,6 +157,7 @@ class App extends Component {
         {this.state.serverData.user &&
           this.state.serverData.user.name}'s Playlists
         </h1> */}
+
             <PlaylistCounter playlists={playlistToRender} />
             <HoursCounter playlists={playlistToRender} />
 
