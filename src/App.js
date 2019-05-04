@@ -11,34 +11,34 @@ let fakeServerData = {
     playlists: [
       {
         name: 'My favorite',
-        songs:[
-          {name: 'Beat It', duration: 1345},
-          {name: 'Cannelloni Makaroni', duration: 1236},
-          {name: 'Rosa helikopter', duration: 70000}
+        songs: [
+          { name: 'Beat It', duration: 1345 },
+          { name: 'Cannelloni Makaroni', duration: 1236 },
+          { name: 'Rosa helikopter', duration: 70000 }
         ]
       },
       {
         name: 'Discover Weekly',
-        songs:[
-          {name: 'Beat It', duration: 1345},
-          {name: 'Cannelloni Makaroni', duration: 1236},
-          {name: 'Rosa helikopter', duration: 70000}
+        songs: [
+          { name: 'Beat It', duration: 1345 },
+          { name: 'Cannelloni Makaroni', duration: 1236 },
+          { name: 'Rosa helikopter', duration: 70000 }
         ]
       },
       {
         name: 'Another playlist - the best!',
-        songs:[
-          {name: 'Beat It', duration: 1345},
-          {name: 'Cannelloni Makaroni', duration: 1236},
-          {name: 'Rosa helikopter', duration: 70000}
+        songs: [
+          { name: 'Beat It', duration: 1345 },
+          { name: 'Hallenlujah', duration: 1236 },
+          { name: 'Rosa helikopter', duration: 70000 }
         ]
       },
       {
         name: 'Playlist - yeah!',
-        songs:[
-          {name: 'Beat It', duration: 1345},
-          {name: 'Cannelloni Makaroni', duration: 1236},
-          {name: 'Rosa helikopter', duration: 70000}
+        songs: [
+          { name: 'Beat It', duration: 1345 },
+          { name: 'Cannelloni Makaroni', duration: 1236 },
+          { name: 'Heh Heh Minika', duration: 70000 }
         ]
       }
     ]
@@ -60,7 +60,7 @@ class PlaylistCounter extends Component {
 //Component #2 collect hours playlist
 class HoursCounter extends Component {
   render() {
-    let allSongs = this.props.playlists.reduce( (songs, eachPlaylist) => {
+    let allSongs = this.props.playlists.reduce((songs, eachPlaylist) => {
       return songs.concat(eachPlaylist.songs)
     }, [])//reduced something to a single value /this case we want to reduce the playlist to a list of songs
     let totalDuration = allSongs.reduce((sum, eachSong) => {
@@ -68,7 +68,7 @@ class HoursCounter extends Component {
     }, 0)
     return (
       <div style={{ ...defaultStyle, width: "40%", display: 'inline-block' }}>
-         <h2>{Math.round(totalDuration/120)} hours</h2>{/* divided by 60 = minutes or 120 = hours */}
+        <h2>{Math.round(totalDuration / 120)} hours</h2>{/* divided by 60 = minutes or 120 = hours */}
       </div>
     );
   }
@@ -89,11 +89,16 @@ class Filter extends Component {
 //Component #4 show playlist
 class Playlist extends Component {
   render() {
+    let playlist = this.props.playlist
     return (
       <div style={{ ...defaultStyle, display: 'inline-block', width: "25%" }}>
         <img alt="playlist" />
-        <h3>Playlist Name</h3>
-        <ul><li>Song 1</li><li>Song 2</li><li>Song 3</li></ul>
+        <h3>{playlist.name}</h3>
+        <ul>
+          {playlist.songs.map(song =>
+            <li>{song.name}</li>
+          )}
+        </ul>
       </div>
     );
   }
@@ -101,42 +106,43 @@ class Playlist extends Component {
 
 //Show all component
 class App extends Component {
-  constructor(){
+  constructor() {
     super();
-    this.state = {serverData : {}}
+    this.state = { serverData: {} }
   }
-  componentDidMount(){
-    setTimeout( () => {
-      this.setState({serverData : fakeServerData});
-    },1000) //1 second
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ serverData: fakeServerData });
+    }, 1000) //1 second
   }
   render() {
     return (
       <div className="App" >
 
-      {/**if there is user it will show h1 tag */}
-      {/* ternary operator */}
+        {/**if there is user it will show h1 tag */}
+        {/* ternary operator */}
         {this.state.serverData.user ?
-        <div>
-        <h1 style={{...defaultStyle, 'font-size' : '54px'}} >
-        {this.state.serverData.user.name}'s Playlists
+          <div>
+            <h1 style={{ ...defaultStyle, 'font-size': '54px' }} >
+              {this.state.serverData.user.name}'s Playlists
         </h1>
 
-        {/* <h1 style={{...defaultStyle, 'font-size' : '54px'}} >
+            {/* <h1 style={{...defaultStyle, 'font-size' : '54px'}} >
         {this.state.serverData.user &&
           this.state.serverData.user.name}'s Playlists
         </h1> */}
-        <PlaylistCounter playlists={this.state.serverData.user.playlists}/>
-        <HoursCounter playlists={this.state.serverData.user.playlists}/>
+            <PlaylistCounter playlists={this.state.serverData.user.playlists} />
+            <HoursCounter playlists={this.state.serverData.user.playlists} />
 
-        <Filter />
-        <Playlist />
-        <Playlist />
-        <Playlist />
-        <Playlist />
-        </div> : <h1 style={defaultStyle}>Loading...</h1>
-      }
-    </div>
+            <Filter />
+            {this.state.serverData.user.playlists.map(playlist =>
+              <Playlist playlist={playlist} />
+            ) // map is transforming array to another array.
+            }
+
+          </div> : <h1 style={defaultStyle}>Loading...</h1>
+        }
+      </div>
     );
   }
 
