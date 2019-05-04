@@ -80,7 +80,8 @@ class Filter extends Component {
     return (
       <div style={{ ...defaultStyle }}>
         <img alt="filter" />
-        <input type="text" />
+        <input type="text" onKeyUp={event =>
+          this.props.onTextChange(event.target.value)} /> {/*keyboard event */}
       </div>
     );
   }
@@ -108,12 +109,16 @@ class Playlist extends Component {
 class App extends Component {
   constructor() {
     super();
-    this.state = { serverData: {} }
+    this.state = {
+      serverData: {},
+      filterString: ''
+    }
   }
   componentDidMount() {
     setTimeout(() => {
       this.setState({ serverData: fakeServerData });
-    }, 1000) //1 second
+    }, 1000); //1 second
+
   }
   render() {
     return (
@@ -134,8 +139,13 @@ class App extends Component {
             <PlaylistCounter playlists={this.state.serverData.user.playlists} />
             <HoursCounter playlists={this.state.serverData.user.playlists} />
 
-            <Filter />
-            {this.state.serverData.user.playlists.map(playlist =>
+            <Filter onTextChange={text => {
+              this.setState({ filterString: text })
+            }} /> {/* parsing onTextChange function on filter */}
+            {this.state.serverData.user.playlists.filter(playlist =>
+              playlist.name.toLocaleLowerCase().includes(
+                this.state.filterString.toLocaleLowerCase())
+            ).map(playlist =>
               <Playlist playlist={playlist} />
             ) // map is transforming array to another array.
             }
