@@ -1,5 +1,7 @@
+import queryString from 'query-string';
 import React, { Component } from 'react';
 import './App.css';
+
 
 let defaultStyle = {
   color: '#fff'
@@ -115,9 +117,20 @@ class App extends Component {
     }
   }
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({ serverData: fakeServerData });
-    }, 1000); //1 second
+
+    let parsed = queryString.parse(window.location.search);
+    let accessToken = parsed.access_token;
+
+    //Pulling data from the Spotify API
+    fetch('https://api.spotify.com/v1/me', {
+      headers: { 'Authorization': 'Bearer ' + accessToken }
+    }).then(response => response.json())
+      .then(data => this.setState({ serverData: { user: data.display_name } }))
+
+    // // SetTimeOut to fake server
+    // setTimeout(() => {
+    //   this.setState({ serverData: fakeServerData });
+    // }, 1000); //1 second
 
   }
   render() {
@@ -154,7 +167,8 @@ class App extends Component {
             ) // map is transforming array to another array.
             }
 
-          </div> : <h1 style={defaultStyle}>Loading...</h1>
+          </div> : <button onClick={() => window.location = 'http://localhost:8888/login'}
+            style={{ padding: '20px', 'font-size': '50px', 'margin-top': '20px' }}>Sign in with Spotify</button>
         }
       </div>
     );
