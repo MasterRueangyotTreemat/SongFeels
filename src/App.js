@@ -121,6 +121,13 @@ class App extends Component {
 
   }
   render() {
+    //if search playlist data will change.
+    let playlistToRender = this.state.serverData.user ?
+      this.state.serverData.user.playlists
+        .filter(playlist =>
+          playlist.name.toLocaleLowerCase().includes(
+            this.state.filterString.toLocaleLowerCase())
+        ) : []
     return (
       <div className="App" >
 
@@ -136,16 +143,13 @@ class App extends Component {
         {this.state.serverData.user &&
           this.state.serverData.user.name}'s Playlists
         </h1> */}
-            <PlaylistCounter playlists={this.state.serverData.user.playlists} />
-            <HoursCounter playlists={this.state.serverData.user.playlists} />
+            <PlaylistCounter playlists={playlistToRender} />
+            <HoursCounter playlists={playlistToRender} />
 
             <Filter onTextChange={text => {
               this.setState({ filterString: text })
             }} /> {/* parsing onTextChange function on filter */}
-            {this.state.serverData.user.playlists.filter(playlist =>
-              playlist.name.toLocaleLowerCase().includes(
-                this.state.filterString.toLocaleLowerCase())
-            ).map(playlist =>
+            {playlistToRender.map(playlist =>
               <Playlist playlist={playlist} />
             ) // map is transforming array to another array.
             }
