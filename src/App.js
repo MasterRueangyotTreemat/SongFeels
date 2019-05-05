@@ -190,7 +190,13 @@ class App extends Component {
             ) // map is transforming array to another array.
             }
 
-          </div> : <button onClick={() => window.location = 'http://localhost:8888/login'}
+          </div> : <button onClick={() => {
+            // check if
+            window.location = window.location.toString().includes('localhost')
+              ? 'http://localhost:8888/login'
+              : 'https://songfeels-backend.herokuapp.com/login'
+          }
+          }
             style={{ padding: '20px', 'font-size': '50px', 'margin-top': '20px' }}>Sign in with Spotify</button>
         }
       </div>
