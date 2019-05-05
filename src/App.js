@@ -192,7 +192,7 @@ class App extends Component {
 
           </div> : <button onClick={() => {
             // check if
-            window.location = window.location.toString().includes('localhost')
+            window.location = window.location.href.includes('localhost')
               ? 'http://localhost:8888/login'
               : 'https://songfeels-backend.herokuapp.com/login'
           }
