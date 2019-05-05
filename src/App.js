@@ -136,14 +136,38 @@ class App extends Component {
 
     fetch('https://api.spotify.com/v1/me/playlists', {
       headers: { 'Authorization': 'Bearer ' + accessToken }
-    }).then(response => response.json())
-      .then(data => this.setState({
-        playlists: data.items.map(item => {
-          console.log(data.items)
+    }).then(response => response.json()) // get the json of me.playlists
+      .then(PlaylistData => {
+        let playlists = PlaylistData.items
+        let trackDataPromises = playlists.map(playlist => {
+          let responsePromise = fetch(playlist.tracks.href, {
+            headers: { 'Authorization': 'Bearer ' + accessToken }
+          })
+          let trackDataPromise = responsePromise
+            .then(response => response.json())
+          return trackDataPromise // dataPromise
+        })
+        let allTracksDataPromises =
+          Promise.all(trackDataPromises)
+        let playlistPromise = allTracksDataPromises.then(trackDatas => {
+          trackDatas.forEach((trackData, i) => {
+            playlists[i].trackDatas = trackData.items
+              .map(item => item.track) // select items to get track of data
+              .map(trackData => ({
+                name: trackData.name,
+                duration: trackData.duration_ms / 1000
+              }))
+          })
+          return playlists
+        })
+        return playlistPromise
+      })
+      .then(playlists => this.setState({
+        playlists: playlists.map(item => {
           return {
             name: item.name,
             imageUrl: item.images[0].url,
-            songs: []
+            songs: item.trackDatas.slice(0, 3)
           }
         })
       }))
@@ -191,7 +215,7 @@ class App extends Component {
             }
 
           </div> : <button onClick={() => {
-            // check if
+            // check if it on localhost it will use http://localhost:8888/login or production it will use https://songfeels-backend.herokuapp.com/login
             window.location = window.location.href.includes('localhost')
               ? 'http://localhost:8888/login'
               : 'https://songfeels-backend.herokuapp.com/login'
