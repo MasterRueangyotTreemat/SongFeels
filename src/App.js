@@ -1,11 +1,22 @@
 import queryString from 'query-string';
 import React, { Component } from 'react';
+import 'reset-css/reset.css';
 import './App.css';
 
 
 let defaultStyle = {
-  color: '#fff'
+  color: '#fff',
+  'font-family': 'Papyrus'
 };
+
+let counterStyle = {
+  ...defaultStyle,
+  width: "40%",
+  display: 'inline-block',
+  'margin-bottom': '20px',
+  'font-size': '20px',
+  'line-heigh': '30px'
+}
 
 let fakeServerData = {
   user: {
@@ -50,8 +61,9 @@ let fakeServerData = {
 //Component #1 collect amount playlist
 class PlaylistCounter extends Component {
   render() {
+    let PlaylistCounterStyle = counterStyle;
     return (
-      <div style={{ ...defaultStyle, width: "40%", display: 'inline-block' }}>
+      <div style={PlaylistCounterStyle}>
         <h2>{this.props.playlists.length} playlists</h2>
       </div>
     );
@@ -68,9 +80,18 @@ class HoursCounter extends Component {
     let totalDuration = allSongs.reduce((sum, eachSong) => {
       return sum + eachSong.duration
     }, 0)
+    let totalDurationHours = Math.round(totalDuration / 60)
+    let isTooLow = totalDurationHours > 10
+    let HoursCounterStyle = {
+      ...counterStyle,
+      color: isTooLow ? 'red' : 'white',
+      'font-weight': isTooLow ? 'bold' : 'normal',
+
+    }
+
     return (
-      <div style={{ ...defaultStyle, width: "40%", display: 'inline-block' }}>
-        <h2>{Math.round(totalDuration / 120)} hours</h2>{/* divided by 60 = minutes or 120 = hours */}
+      <div style={HoursCounterStyle}>
+        <h2>{totalDurationHours} hours</h2>{/* divided by 60 = minutes or 120 = hours */}
       </div>
     );
   }
@@ -83,7 +104,8 @@ class Filter extends Component {
       <div style={{ ...defaultStyle }}>
         <img alt="filter" />
         <input type="text" onKeyUp={event =>
-          this.props.onTextChange(event.target.value)} /> {/*keyboard event */}
+          this.props.onTextChange(event.target.value)}
+          style={{ ...defaultStyle, color: 'black', 'font-size': '20px', padding: '10px' }} /> {/*keyboard event */}
       </div>
     );
   }
@@ -94,12 +116,20 @@ class Playlist extends Component {
   render() {
     let playlist = this.props.playlist
     return (
-      <div style={{ ...defaultStyle, display: 'inline-block', width: "25%" }}>
+      <div style={{
+        ...defaultStyle,
+        display: 'inline-block',
+        width: "25%"
+        , padding: '10px',
+        'background-color': this.props.index % 2
+          ? '#C0C0C0'
+          : '#808080'
+      }}>
         <img src={playlist.imageUrl} style={{ width: '60px' }} alt="playlist" />
         <h3>{playlist.name}</h3>
-        <ul>
+        <ul style={{ 'margin-top': '10px', 'font-weight': 'bold' }}>
           {playlist.songs.map(song =>
-            <li>{song.name}</li>
+            <li style={{ 'padding-top': '2px' }}>{song.name}</li>
           )}
         </ul>
       </div>
@@ -197,7 +227,11 @@ class App extends Component {
         {/* ternary operator */}
         {this.state.user ?
           <div>
-            <h1 style={{ ...defaultStyle, 'font-size': '54px' }} >
+            <h1 style={{
+              ...defaultStyle,
+              'font-size': '54px',
+              'margin-top': '5px'
+            }} >
               {this.state.user.name}'s Playlists
         </h1>
 
@@ -212,8 +246,8 @@ class App extends Component {
             <Filter onTextChange={text => {
               this.setState({ filterString: text })
             }} /> {/* parsing onTextChange function on filter */}
-            {playlistToRender.map(playlist =>
-              <Playlist playlist={playlist} />
+            {playlistToRender.map((playlist, i) =>
+              <Playlist playlist={playlist} index={i} />
             ) // map is transforming array to another array.
             }
 
